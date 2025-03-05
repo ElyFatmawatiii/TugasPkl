@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('phone');
             $table->integer('class');
             $table->string('address');
-            $table->boolean('gender');
-            $table->boolean('status');
+            $table->enum('gender',['male','female']);
+            $table->enum('status', ['active','inactive',]);
             $table->timestamps(); // created_at, update_at
         });
     }
