@@ -12,6 +12,6 @@ class UserController extends Controller
 
         //  dd($users);
 
-        return view('user.index', compact('users'));
+        return view('backend.user.index', compact('users'));
     }
 }
