@@ -69,9 +69,6 @@
     <!-- Datatables -->
     <script src="{{ url('backend/assets/js/plugin/datatables/datatables.min.js')}}"></script>
 
-    <!-- Bootstrap Notify -->
-    <script src="{{ url('backend/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js')}}"></script>
-
     <!-- jQuery Vector Maps -->
     <script src="{{ url('backend/assets/js/plugin/jsvectormap/jsvectormap.min.js')}}"></script>
     <script src="{{ url('backend/assets/js/plugin/jsvectormap/world.js')}}"></script>
@@ -85,5 +82,10 @@
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
     <script src="{{ url('backend/assets/js/setting-demo.js')}}"></script>
     <script src="{{ url('backend/assets/js/demo.js')}}"></script>
+      <!-- SweetAlert CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @yield('script')
+
      </body>
 </html>
