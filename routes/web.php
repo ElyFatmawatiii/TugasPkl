@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,16 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
         Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
         Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+    });
+
+    Route::prefix('students')->group(function () {
+        Route::get('/', [StudentsController::class, 'index'])->name('students');
+        Route::get('/create', [StudentsController::class, 'create'])->name('students.create');
+        Route::post('/store', [StudentsController::class, 'store'])->name('students.store');
+        Route::get('/edit/{id}', [StudentsController::class, 'edit'])->name('students.edit');
+        Route::put('/update/{id}', [StudentsController::class, 'update'])->name('students.update');
+        Route::delete('/delete/{id}', [StudentsController::class, 'destroy'])->name('students.destroy');
+
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,7 +1,6 @@
 @extends('backend.app')
 
 @section('content')
-
 <div class="container">
     <div class="page-inner">
         <div class="page-header">
@@ -34,10 +33,12 @@
                 <h4 class="card-title mb-0">Data User</h4>
                 <a href="{{ route('user.create') }}" class="btn btn-primary">Tambah</a>
             </div>
+            
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover text-start">
-                        <thead class="table-primary">
+            <div class="card-body">
+    <div class="table-responsive" style="overflow-x: auto; max-height: 400px;">
+        <table class="table table-bordered table-hover text-start">
+            <thead class="table-primary">
                             <tr>
                                 <th>No</th>
                                 <th>Nama</th>
@@ -67,9 +68,7 @@
             </div>
         </div>
     </div>
-
 </div>
-
 @endsection
 
 @section('script')

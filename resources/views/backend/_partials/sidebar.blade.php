@@ -37,7 +37,13 @@
               <li class="nav-item {{ Request::is('user*') ? 'active' : ''}}">
                 <a href="{{ route ('user') }}">
                   <i class="fas fa-users"></i>
-                  <p>User</p>
+                  <p>Data User</p>
+                </a>
+              </li>
+              <li class="nav-item {{ Request::is('student*') ? 'active' : ''}}">
+                <a href="{{ route ('students') }}">
+                  <i class="fas fa-users"></i>
+                  <p>Data Siswa</p>
                 </a>
               </li>
               </li>
