@@ -60,7 +60,18 @@ if ($request->hasFile('image')) {
     
         return redirect()->route('students')->with('success', 'Data berhasil disimpan.');
     }
-         
+
+    public function show($id)
+    {
+        $student = DB::table('students')->where('id', $id)->first();
+    
+        if (!$student) {
+            return redirect()->route('students')->with('error', 'Data tidak ditemukan');
+        }
+    
+        return view('student.show', compact('student'));
+    }
+     
 
    public function edit($id)
 {
@@ -71,7 +82,6 @@ if ($request->hasFile('image')) {
     }
     return view('student.edit', compact('student'));
 }
-
 
 
 public function update(Request $request, $id)

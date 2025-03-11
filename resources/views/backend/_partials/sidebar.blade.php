@@ -46,6 +46,11 @@
                   <p>Data Siswa</p>
                 </a>
               </li>
+              <li class="nav-item {{ Request::is('teacher*') ? 'active' : ''}}">
+                <a href="{{ route ('teacher') }}">
+                  <i class="fas fa-users"></i>
+                  <p>Data Guru</p>
+                </a>
               </li>
               <li class="nav-item {{ Request::is('logout*') ? 'active' : ''}}">
                   <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
