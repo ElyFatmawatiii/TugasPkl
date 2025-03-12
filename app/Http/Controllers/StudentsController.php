@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use illuminate\Support\File;
 
 class StudentsController extends Controller
 {
-    public function index()
+   public function index(Request $request)
     {
-        $students = DB::table('students')->get();
-
-        //  dd($users);
-
-        return view('student.index', compact('students'));
-    }
+       $search = $request->get('search');
+       $students = DB::table('students')
+       ->where('name', 'like', '%' . $search . '%')
+       ->orWhere('email', 'like', '%' . $search . '%')
+       ->orWhere('address', 'like', '%' . $search . '%')
+       ->orWhere('class', 'like', '%' . $search . '%')
+       ->paginate(5);
+       return view('student.index', compact('students'));
+   }
 
     public function create()
     {

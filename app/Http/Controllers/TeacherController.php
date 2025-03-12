@@ -1,20 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Teacher;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use illuminate\Support\File;
 
+use function Laravel\Prompts\search;
 
 class TeacherController extends Controller
 {
-    public function index()
-    {
-        $teachers = DB::table('teacher')->get();
+    public function index(Request $request)
+{
+   $search = $request->get('search');
+   $teachers = Teacher::query()
+       ->when($search, function ($query, $search) {
+           return $query->where('name', 'like', '%' . $search . '%')
+    ->orWhere('email', 'like', '%' . $search . '%')
+    ->orWhere('address', 'like', '%' . $search . '%');
+       })
+       ->paginate(5);
 
-        return view('backend.teacher.index', compact('teachers'));
-    }
-
+       return view('backend.teacher.index', compact('teachers', 'search'));
+}
     public function create()
     {
         return view('backend.teacher.create');
@@ -117,4 +126,5 @@ class TeacherController extends Controller
         DB::table('teacher')->where('id', $id)->delete();
         return redirect()->route('teacher')->with('success', 'Data Berhasil Dihapus.');
     }
+    
 }

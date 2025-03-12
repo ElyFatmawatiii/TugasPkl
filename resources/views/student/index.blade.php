@@ -37,8 +37,17 @@
                 <a href="{{ route('students.create') }}" class="btn btn-primary">Tambah</a>
             </div>
             <div class="card-body">
-                <!-- Tambahkan max-height dan overflow-y agar table bisa discroll vertikal -->
-                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <div class="table-responsive" style="overflow-x: auto; max-height: 400px;">
+                    <div class="d-flex justify-content-between mb-3">
+                        <form action="{{ route('students') }}" method="GET" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Cari Data Siswa" 
+                                    value="{{ request('search') }}">
+                                <button type="submit" class="btn btn-primary">Cari</button>
+                            </div>
+                        </form>
+                    </div>
+
                     <table class="table table-bordered table-hover text-start">
                         <thead class="table-primary">
                             <tr>
@@ -55,15 +64,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $no = 1; @endphp
+                            @php 
+                                $no = ($students->currentPage() - 1) * $students->perPage() + 1; 
+                            @endphp
                             @foreach ($students as $student)
                             <tr>
                                 <td>{{ $no++ }}</td> 
                                 <td class="text-center">
                                     @if(!empty($student->image))
                                     <img src="{{ url('backend/assets/' . $student->image) }}" alt="Foto Siswa" class="img-thumbnail" width="50">
-                                    @elseif(!empty($student->image))
-                                    <img src="{{ url('backend/assets/' . $student->image) }}" alt="Foto Siswa" class="img-thumbnail" width="50">    
                                     @endif
                                 </td>
                                 <td>{{ $student->name }}</td>
@@ -80,7 +89,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center text-nowrap">
-                                     <a href="{{ route('students.show', $student->id) }}" class="btn btn-info btn-sm" data-bs-toggle="tooltip" title="Lihat Detail">
+                                    <a href="{{ route('students.show', $student->id) }}" class="btn btn-info btn-sm" data-bs-toggle="tooltip" title="Lihat Detail">
                                         <i class="fas fa-eye"></i> 
                                     </a>
                                     <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="Edit Data">
@@ -98,7 +107,34 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>                
+                </div>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <nav>
+                        <ul class="pagination">
+                            @if ($students->onFirstPage())
+                                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                            @else
+                                <li class="page-item"><a class="page-link" href="{{ $students->previousPageUrl() }}">&laquo;</a></li>
+                            @endif
+
+                            @for ($page = 1; $page <= $students->lastPage(); $page++)
+                                @if ($page == $students->currentPage())
+                                    <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                                @else
+                                    <li class="page-item"><a class="page-link" href="{{ $students->url($page) }}">{{ $page }}</a></li>
+                                @endif
+                            @endfor
+
+                            @if ($students->hasMorePages())
+                                <li class="page-item"><a class="page-link" href="{{ $students->nextPageUrl() }}">&raquo;</a></li>
+                            @else
+                                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                            @endif
+                        </ul>
+                    </nav>
+                </div>
+
             </div>
         </div>
     </div>

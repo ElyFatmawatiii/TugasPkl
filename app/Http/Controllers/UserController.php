@@ -3,14 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = DB::table('users')->get();
+        $query = User::query(); // Gunakan Model Eloquent
+
+        // Jika ada pencarian, tambahkan filter
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%");
+        }
+
+        $users = $query->paginate(5); // Menampilkan 10 data per halaman
+
         return view('backend.user.index', compact('users'));
     }
 
@@ -27,23 +36,20 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $data = [
+        User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
+        ]);
 
-        DB::table('users')->insert($data);
         return redirect()->route('user')->with('success', 'User berhasil dibuat.');
     }
 
     public function edit($id)
     {
-        $user = DB::table('users')->where('id', $id)->first();
+        $user = User::find($id);
         if (!$user) {
-            return redirect()->route('user')->with('error', 'User tidak ditemukan.');
+            return redirect()->route('user.index')->with('error', 'User tidak ditemukan.');
         }
         return view('backend.user.edit', compact('user'));
     }
@@ -56,18 +62,16 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $data = [
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'updated_at' => now(),
-        ];
+        $user = User::findOrFail($id);
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
 
         // Jika password diisi, update password
         if ($request->filled('password')) {
-            $data['password'] = bcrypt($validatedData['password']);
+            $user->password = bcrypt($validatedData['password']);
         }
 
-        DB::table('users')->where('id', $id)->update($data);
+        $user->save();
 
         return redirect()->route('user')->with('success', 'User berhasil diperbarui.');
     }
@@ -75,7 +79,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            DB::table('users')->where('id', $id)->delete();
+            $user = User::findOrFail($id);
+            $user->delete();
+
             return redirect()->route('user')->with('success', 'User berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect()->route('user')->with('error', 'Gagal menghapus user.');

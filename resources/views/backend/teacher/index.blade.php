@@ -35,10 +35,20 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="card-title">Data Guru</h4>
                 <a href="{{ route('teacher.create') }}" class="btn btn-primary">Tambah</a>
-            </div>
-            <div class="card-body">
-                <!-- Tambahkan max-height dan overflow-y agar table bisa discroll vertikal -->
-                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                </div>
+        
+        <div class="card-body">
+     <div class="table-responsive" style="overflow-x: auto; max-height: 400px;">
+
+    <div class="d-flex justify-content-between mb-3">
+            <form action="{{ route('teacher') }}" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Cari Data Guru" 
+                value="{{ request('search') }}">
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </div>
+    </form>
+    </div>
                     <table class="table table-bordered table-hover text-start">
                         <thead class="table-primary">
                             <tr>
@@ -54,7 +64,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $no = 1; @endphp
+                            @php $no = ($teachers->currentPage() - 1) * $teachers->perPage() + 1; @endphp
                             @foreach ($teachers as $teacher)
                             <tr>
                                 <td>{{ $no++ }}</td> 
@@ -96,7 +106,33 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>                
+                </div>
+                <div class="d-flex justify-content-center mt-3">
+    <nav>
+        <ul class="pagination">
+            @if ($teachers->onFirstPage())
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            @else
+                <li class="page-item"><a class="page-link" href="{{ $teachers->previousPageUrl() }}">&laquo;</a></li>
+            @endif
+
+            @for ($page = 1; $page <= $teachers->lastPage(); $page++)
+                @if ($page == $teachers->currentPage())
+                    <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                @else
+                    <li class="page-item"><a class="page-link" href="{{ $teachers->url($page) }}">{{ $page }}</a></li>
+                @endif
+            @endfor
+
+            @if ($teachers->hasMorePages())
+                <li class="page-item"><a class="page-link" href="{{ $teachers->nextPageUrl() }}">&raquo;</a></li>
+            @else
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            @endif
+        </ul>
+    </nav>
+</div>
+
             </div>
         </div>
     </div>
