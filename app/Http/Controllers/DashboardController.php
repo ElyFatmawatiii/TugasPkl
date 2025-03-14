@@ -8,11 +8,13 @@ class DashboardController extends Controller
 {
     public function index()
     {
-       // $users = DB::table('users')->get();
+        $totalUsers = DB::table('users')->count();
+        $totalSiswa = DB::table('students')->count();
+        $totalGuru = DB::table('teacher')->count();
+        $totalMapel = DB::table('mapel')->count();
 
-        // //  dd($users);
-
-        return view('backend.dashboard.index');
+        return view('backend.dashboard.index', compact('totalUsers', 'totalSiswa', 'totalGuru', 'totalMapel'));
     }
 }
+
 

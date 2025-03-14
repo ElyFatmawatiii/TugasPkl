@@ -41,7 +41,7 @@
                     <div class="d-flex justify-content-between mb-3">
                         <form action="{{ route('students') }}" method="GET" class="mb-3">
                             <div class="input-group">
-                                <input type="text" name="search" class="form-control" placeholder="Cari Data Siswa" 
+                                <input type="search" name="search" class="form-control" placeholder="Cari Data Siswa" 
                                     value="{{ request('search') }}">
                                 <button type="submit" class="btn btn-primary">Cari</button>
                             </div>
@@ -64,6 +64,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($students->count() > 0)
                             @php 
                                 $no = ($students->currentPage() - 1) * $students->perPage() + 1; 
                             @endphp
@@ -98,13 +99,18 @@
                                     <form id="delete-form-{{ $student->id }}" action="{{ route('students.destroy', $student->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $student->id }})" data-bs-toggle="tooltip" title="Hapus Data">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('{{ $student->id }}')" data-bs-toggle="tooltip" title="Hapus Data">
                                             <i class="fas fa-trash-alt"></i> 
                                         </button>
                                     </form>
                                 </td>
                             </tr>
                             @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="10" class="text-center text-danger fw-bold">Data Siswa Tidak Ditemukan</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>

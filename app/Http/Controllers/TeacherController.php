@@ -20,7 +20,7 @@ class TeacherController extends Controller
     ->orWhere('email', 'like', '%' . $search . '%')
     ->orWhere('address', 'like', '%' . $search . '%');
        })
-       ->paginate(5);
+       ->paginate(3);
 
        return view('backend.teacher.index', compact('teachers', 'search'));
 }

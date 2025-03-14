@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MapelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentsController;
@@ -34,7 +35,6 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('/students/{id}/edit', [StudentsController::class, 'edit'])->name('students.edit');
         Route::put('/students/{id}', [StudentsController::class, 'update'])->name('students.update');
         Route::delete('/delete/{id}', [StudentsController::class, 'destroy'])->name('students.destroy');
-
     });
 
     Route::prefix('teacher')->group(function () {
@@ -45,13 +45,20 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('/teacher/edit/{id}', [TeacherController::class, 'edit'])->name('teacher.edit');
         Route::put('/update/{id}', [TeacherController::class, 'update'])->name('teacher.update');
         Route::delete('/delete/{id}', [TeacherController::class, 'destroy'])->name('teacher.destroy');
+    });
 
+    Route::prefix('mapel')->group(function () {
+        Route::get('/', [MapelController::class, 'index'])->name('mapel');
+        Route::get('/mapel/create', [MapelController::class, 'create'])->name('mapel.create');
+        Route::post('/mapel/store', [MapelController::class, 'store'])->name('mapel.store');
+        Route::get('/mapel/edit/{kode_mapel}', [MapelController::class, 'edit'])->name('mapel.edit');
+        Route::put('/mapel/update/{kode_mapel}', [MapelController::class, 'update'])->name('mapel.update');
+        Route::delete('/mapel/destroy/{kode_mapel}', [MapelController::class, 'destroy'])->name('mapel.destroy');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
 });
 
 
@@ -59,4 +66,4 @@ Route::middleware('auth', 'verified')->group(function () {
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

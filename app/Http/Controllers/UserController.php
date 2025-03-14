@@ -18,7 +18,7 @@ class UserController extends Controller
                   ->orWhere('email', 'like', "%$search%");
         }
 
-        $users = $query->paginate(5); // Menampilkan 10 data per halaman
+        $users = $query->paginate(4); 
 
         return view('backend.user.index', compact('users'));
     }

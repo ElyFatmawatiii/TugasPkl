@@ -9,5 +9,9 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'email','phone','class','address','gender','status','image']; // Sesuaikan dengan kolom di database
+    protected $table = 'students';
+
+    protected $fillable = [
+        'name', 'email','phone','class','address','gender','status','image'
+    ]; // Sesuaikan dengan kolom di database
 }

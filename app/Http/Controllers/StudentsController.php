@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Requests\StoreStudentRequest;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use illuminate\Support\File;
@@ -15,7 +17,7 @@ class StudentsController extends Controller
        ->orWhere('email', 'like', '%' . $search . '%')
        ->orWhere('address', 'like', '%' . $search . '%')
        ->orWhere('class', 'like', '%' . $search . '%')
-       ->paginate(5);
+       ->paginate(3);
        return view('student.index', compact('students'));
    }
 
@@ -24,19 +26,8 @@ class StudentsController extends Controller
         return view('student.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        $request->validate([
-            'name'    => 'required',
-            'email'   => 'required|email',
-            'phone'   => 'required',
-            'class'   => 'required',
-            'address' => 'required',
-            'gender'  => 'required|in:male,female',
-            'status'  => 'required|in:active,inactive',
-            'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
     $photoPath = null;
 if ($request->hasFile('image')) {
     $file = $request->file('image');
