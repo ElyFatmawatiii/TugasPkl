@@ -7,6 +7,9 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NilaiController;
+use App\Models\Mapel;
+use App\Models\Nilai;
 use Illuminate\Support\Facades\Route;
 
 
@@ -55,6 +58,16 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::put('/mapel/update/{kode_mapel}', [MapelController::class, 'update'])->name('mapel.update');
         Route::delete('/mapel/destroy/{kode_mapel}', [MapelController::class, 'destroy'])->name('mapel.destroy');
     });
+
+    Route::prefix('nilai')->group(function () {
+        Route::get('/', [NilaiController::class, 'index'])->name('nilai');
+        Route::get('/nilai/create', [NilaiController::class, 'create'])->name('nilai.create');
+        Route::post('/nilai/store', [NilaiController::class, 'store'])->name('nilai.store');
+        Route::get('/nilai/edit/{id}', [NilaiController::class, 'edit'])->name('nilai.edit');
+        Route::put('/nilai/update/{id}', [NilaiController::class, 'update'])->name('nilai.update');
+        Route::delete('/nilai/destroy/{id}', [NilaiController::class, 'destroy'])->name('nilai.destroy');
+    });
+    
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

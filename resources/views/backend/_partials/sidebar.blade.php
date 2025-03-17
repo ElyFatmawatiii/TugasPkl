@@ -59,6 +59,12 @@
              <p>Mapel</p>
            </a>
          </li>
+         <li class="nav-item {{ Request::is('book*') ? 'active' : ''}}">
+           <a href="{{ route('nilai') }}">
+           <i class="fas fa-graduation-cap"></i>
+             <p>Nilai</p>
+           </a>
+         </li>
          <li class="nav-item {{ Request::is('logout*') ? 'active' : ''}}">
            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
              <i class="fas fa-sign-out-alt"></i>
