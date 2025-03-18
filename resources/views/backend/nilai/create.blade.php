@@ -18,7 +18,7 @@
                             <div class="form-group row">
                                 <label for="student_id" class="col-md-4 col-form-label text-md-right">Siswa</label>
                                 <div class="col-md-6">
-                                    <select id="student_id" class="form-control" name="student_id" required>
+                                    <select id="student_id"  name="student_id" class="form-control select2" required>
                                         <option value="">-- Pilih Siswa --</option>
                                         @foreach($students as $student)
                                             <option value="{{ $student->id }}">{{ $student->name }}</option>
@@ -31,7 +31,7 @@
                             <div class="form-group row mt-3">
                                 <label for="teacher_id" class="col-md-4 col-form-label text-md-right">Guru</label>
                                 <div class="col-md-6">
-                                    <select id="teacher_id" class="form-control" name="teacher_id" required>
+                                    <select id="teacher_id"  name="teacher_id" class="form-control select2" required>
                                         <option value="">-- Pilih Guru --</option>
                                         @foreach($teachers as $teacher)
                                             <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
@@ -44,7 +44,7 @@
                             <div class="form-group row mt-3">
                                 <label for="mapel_id" class="col-md-4 col-form-label text-md-right">Mata Pelajaran</label>
                                 <div class="col-md-6">
-                                    <select id="mapel_id" class="form-control" name="mapel_id" required>
+                                    <select id="mapel_id" name="mapel_id" class="form-control select2" required>
                                         <option value="">-- Pilih Mata Pelajaran --</option>
                                         @foreach($mapels as $mapel)
                                             <option value="{{ $mapel->id }}">{{ $mapel->nama }}</option>
@@ -83,4 +83,21 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<!-- Memuat CSS dan JS Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.select2').select2({
+            placeholder: "Pilih opsi",
+            allowClear: true,
+            width: '100%'  // Pastikan Select2 menyesuaikan dengan lebar container
+        });
+    });
+</script>
 @endsection

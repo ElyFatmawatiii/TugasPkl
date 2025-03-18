@@ -25,8 +25,12 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="card-title mb-0">Data Nilai</h4>
-                <a href="{{ route('nilai.create') }}" class="btn btn-primary">Tambah</a>
+                <div>
+                    <a href="{{ route('nilai.create') }}" class="btn btn-primary me-2">Tambah</a>
+                    <a href="{{ route('nilai.export-pdf') }}" class="btn btn-danger">Export PDF</a>
+                </div>
             </div>
+
 
             <div class="card-body">
                 <table class="table table-bordered table-hover text-start" width="100%" id="nilai">
@@ -52,22 +56,42 @@
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-    $('#nilai').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('nilai') }}",
-        dom: '<"top d-flex justify-content-between mb-3"lf>rt<"bottom"ip><"clear">',
-        columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false }, // ✅ Tambahkan nomor urut
-            { data: 'nama_siswa', name: 'nama_siswa' },
-            { data: 'nama_guru', name: 'nama_guru' },
-            { data: 'mapel', name: 'mapel' },
-            { data: 'nilai', name: 'nilai' },
-            { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
-        ]
+        $('#nilai').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('nilai') }}",
+            dom: '<"top d-flex justify-content-between mb-3"lf>rt<"bottom"ip><"clear">',
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                }, // ✅ Tambahkan nomor urut
+                {
+                    data: 'nama_siswa',
+                    name: 'nama_siswa'
+                },
+                {
+                    data: 'nama_guru',
+                    name: 'nama_guru'
+                },
+                {
+                    data: 'mapel',
+                    name: 'mapel'
+                },
+                {
+                    data: 'nilai',
+                    name: 'nilai'
+                },
+                {
+                    data: 'aksi',
+                    name: 'aksi',
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
     });
-});
-
 </script>
 <script>
     function confirmDelete(id) {

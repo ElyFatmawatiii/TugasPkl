@@ -27,7 +27,7 @@
                             <div class="form-group row">
                                 <label for="student_id" class="col-md-4 col-form-label text-md-right">Nama Siswa</label>
                                 <div class="col-md-6">
-                                    <select id="student_id" class="form-control" name="student_id" required>
+                                    <select id="student_id" class="form-control select2" name="student_id" required>
                                         @foreach ($students as $student)
                                             <option value="{{ $student->id }}" {{ $nilai->student_id == $student->id ? 'selected' : '' }}>
                                                 {{ $student->name }}
@@ -40,7 +40,7 @@
                             <div class="form-group row mt-3">
                                 <label for="teacher_id" class="col-md-4 col-form-label text-md-right">Nama Guru</label>
                                 <div class="col-md-6">
-                                    <select id="teacher_id" class="form-control" name="teacher_id" required>
+                                    <select id="teacher_id" class="form-control select2" name="teacher_id" required>
                                         @foreach ($teachers as $teacher)
                                             <option value="{{ $teacher->id }}" {{ $nilai->teacher_id == $teacher->id ? 'selected' : '' }}>
                                                 {{ $teacher->name }}
@@ -53,7 +53,7 @@
                             <div class="form-group row mt-3">
                                 <label for="mapel_id" class="col-md-4 col-form-label text-md-right">Mata Pelajaran</label>
                                 <div class="col-md-6">
-                                    <select id="mapel_id" class="form-control" name="mapel_id" required>
+                                    <select id="mapel_id" class="form-control select2" name="mapel_id" required>
                                         @foreach ($mapels as $mapel)
                                             <option value="{{ $mapel->id }}" {{ $nilai->mapel_id == $mapel->id ? 'selected' : '' }}>
                                                 {{ $mapel->nama }}
@@ -86,3 +86,21 @@
     </div>
 </div>
 @endsection
+
+@section('script')
+<!-- Memuat CSS dan JS Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.select2').select2({
+            placeholder: "Pilih opsi",
+            allowClear: true,
+            width: '100%'  // Pastikan Select2 menyesuaikan dengan lebar container
+        });
+    });
+</script>
+@endsection
+
