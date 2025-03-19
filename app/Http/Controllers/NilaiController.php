@@ -73,8 +73,8 @@ class NilaiController extends Controller
     {
         $request->validate([
             'student_id' => 'required|exists:students,id',
-            'teacher_id' => 'required|exists:teachers,id',
-            'mapel_id' => 'required|exists:mapels,id',
+            'teacher_id' => 'required|exists:teacher,id',
+            'mapel_id' => 'required|exists:mapel,id',
             'nilai' => 'required|integer|min:0|max:100',
         ]);
 
@@ -85,7 +85,7 @@ class NilaiController extends Controller
             'nilai' => $request->nilai,
         ]);
 
-        return redirect()->route('nilai.index')->with('success', 'Nilai berhasil ditambahkan!');
+        return redirect()->route('nilai')->with('success', 'Nilai berhasil ditambahkan!');
     }
 
     /**
@@ -108,15 +108,15 @@ class NilaiController extends Controller
     {
         $request->validate([
             'student_id' => 'required|exists:students,id',
-            'teacher_id' => 'required|exists:teachers,id',
-            'mapel_id' => 'required|exists:mapels,id',
+            'teacher_id' => 'required|exists:teacher,id',
+            'mapel_id' => 'required|exists:mapel,id',
             'nilai' => 'required|integer|min:0|max:100',
         ]);
 
         $nilai = Nilai::findOrFail($id);
         $nilai->update($request->all());
 
-        return redirect()->route('nilai.index')->with('success', 'Nilai berhasil diperbarui.');
+        return redirect()->route('nilai')->with('success', 'Nilai berhasil diperbarui.');
     }
 
     /**
@@ -127,7 +127,7 @@ class NilaiController extends Controller
         $nilai = Nilai::findOrFail($id);
         $nilai->delete();
 
-        return redirect()->route('nilai.index')->with('success', 'Nilai berhasil dihapus.');
+        return redirect()->route('nilai')->with('success', 'Nilai berhasil dihapus.');
     }
 
     /**

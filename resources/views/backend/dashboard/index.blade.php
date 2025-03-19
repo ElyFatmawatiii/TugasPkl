@@ -100,7 +100,131 @@
             </div>
 
         </div>
+   
+
+
+<!-- Row untuk Chart -->
+<div class="row">
+    <!-- Chart 1: Distribusi Nilai -->
+    <div class="col-md-6">
+        <div class="card card-round">
+            <div class="card-header">
+                <div class="card-head-row">
+                    <div class="card-title">Distribusi Nilai Siswa</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="studentGradesChart" style="height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 2: Pie Chart Distribusi Data -->
+    <div class="col-md-6">
+        <div class="card card-round">
+            <div class="card-header">
+                <div class="card-head-row">
+                    <div class="card-title">Distribusi Data</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="dataPieChart" style="height: 300px;"></canvas>
+            </div>
+        </div>
     </div>
 </div>
+</div>
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Canvas untuk Pie Chart -->
+<canvas id="dataPieChart" width="400" height="400"></canvas>
+
+<!-- Canvas untuk Bar Chart -->
+<canvas id="studentGradesChart" width="400" height="400"></canvas>
+
+<!-- Script untuk Pie Chart -->
+<script>
+    var ctxPie = document.getElementById('dataPieChart').getContext('2d');
+    var dataPieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: <?= json_encode($pieLabels) ?>,
+            datasets: [{
+                data: <?= json_encode($pieData) ?>,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)', // Biru
+                    'rgba(75, 192, 192, 0.6)', // Hijau
+                    'rgba(255, 206, 86, 0.6)', // Kuning
+                    'rgba(255, 99, 132, 0.6)'  // Merah
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+</script>
+
+<!-- Script untuk Bar Chart -->
+<script>
+    var ctxBar = document.getElementById('studentGradesChart').getContext('2d');
+    var studentGradesChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: <?= json_encode($nilaiLabels) ?>, // Label kategori nilai, misal: ['A', 'B', 'C', 'D', 'E']
+            datasets: [{
+                label: 'Frekuensi Nilai',
+                data: <?= json_encode($nilaiFrequencies) ?>, // Data frekuensi masing-masing kategori nilai
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)', // Biru
+                    'rgba(75, 192, 192, 0.6)', // Hijau
+                    'rgba(255, 206, 86, 0.6)', // Kuning
+                    'rgba(255, 159, 64, 0.6)', // Oranye
+                    'rgba(255, 99, 132, 0.6)'  // Merah
+                ],
+                borderColor: 'rgba(0, 0, 0, 0.8)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0
+                    },
+                    title: {
+                        display: true,
+                        text: 'Frekuensi'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Kategori Nilai'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 
 @endsection
