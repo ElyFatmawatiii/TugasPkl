@@ -61,19 +61,26 @@
          </li>
          <li class="nav-item {{ Request::is('book*') ? 'active' : ''}}">
            <a href="{{ route('nilai') }}">
-           <i class="fas fa-graduation-cap"></i>
+             <i class="fas fa-graduation-cap"></i>
              <p>Nilai</p>
            </a>
          </li>
-         <li class="nav-item {{ Request::is('logout*') ? 'active' : ''}}">
-           <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+         <li class="nav-item {{ Request::is('book*') ? 'active' : ''}}">
+           <a href="{{ route('pendaftaran') }}">
+             <i class="fas fa-user-plus"></i>
+             <p>Pendaftaran</p>
+           </a>
+         </li>
+         <li class="nav-item">
+           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+             @csrf
+           </form>
+           <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
              <i class="fas fa-sign-out-alt"></i>
              <p>Logout</p>
            </a>
-           <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-             @csrf
-           </form>
          </li>
+
        </ul>
      </div>
    </div>

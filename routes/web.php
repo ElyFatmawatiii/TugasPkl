@@ -9,6 +9,8 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\Auth\RegisterUserController;
 use App\Models\Mapel;
 use App\Models\Nilai;
 use App\Models\Student;
@@ -21,6 +23,27 @@ Route::get('/', function () {
 
 Route::middleware('auth', 'verified')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
+
+Route::get('/registeruser', [RegisterUserController::class, 'create'])->name('user.register');
+Route::post('/registeruser', [RegisterUserController::class, 'store'])->name('user.register.store');
+
+// Route::get('/registeruser', [RegisterUserController::class, 'create'])->name('registeruser');
+
+Route::get('/register', function () {
+    return redirect()->route('pendaftaran.store');
+});
+
+// Middleware auth untuk halaman yang memerlukan login
+Route::prefix('pendaftaran')->group(function () {
+    Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran');
+    Route::get('/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+    Route::post('/store', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+    Route::get('/pendaftaran/edit/{id}', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit'); 
+    Route::put('/pendaftaran/update/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
+    Route::delete('/pendaftaran/destroy/{id}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
+    Route::get('/pendaftaran/show/{id}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
+});
 
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user');
@@ -68,19 +91,15 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('/nilai/edit/{id}', [NilaiController::class, 'edit'])->name('nilai.edit');
         Route::put('/nilai/update/{id}', [NilaiController::class, 'update'])->name('nilai.update');
         Route::delete('/nilai/destroy/{id}', [NilaiController::class, 'destroy'])->name('nilai.destroy');
-       
     });
 
     Route::get('/nilai/export-pdf', [PdfController::class, 'exportPdf'])->name('nilai.export-pdf');
+
     
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-
-
 
 
 

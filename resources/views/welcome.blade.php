@@ -40,9 +40,17 @@
 
                         @if (Route::has('register'))
                             <a
+                                href="{{ route('user.register') }}"
+                                class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+                                Register User
+                            </a>
+                        @endif
+
+                        @if (Route::has('register'))
+                            <a
                                 href="{{ route('register') }}"
                                 class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
-                                Register
+                                Register Students
                             </a>
                         @endif
                     @endauth
@@ -273,5 +281,18 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: "{{ session('success') }}",
+        showConfirmButton: false,
+        timer: 2000
+    });
+</script>
+@endif
     </body>
 </html>
