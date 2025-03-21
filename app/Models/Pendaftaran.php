@@ -19,6 +19,7 @@ class Pendaftaran extends Model
         'jenis_kelamin',
         'asal_sekolah',
         'nomor_hp',
+        'status',
         'nama_ayah',
         'nama_ibu',
         'alamat_email',

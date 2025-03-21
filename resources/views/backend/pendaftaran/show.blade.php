@@ -69,9 +69,73 @@
                         <th>Tanggal Pendaftaran</th>
                         <td>{{ \Carbon\Carbon::parse($pendaftaran->created_at)->format('d M Y, H:i') }}</td>
                     </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <span id="status-text" class="badge 
+                                {{ $pendaftaran->status == 'Diterima' ? 'bg-success' : 
+                                   ($pendaftaran->status == 'Ditolak' ? 'bg-danger' : 'bg-warning') }}">
+                                {{ $pendaftaran->status }}
+                            </span>
+                        </td>
+                    </tr>
                 </table>
+                <div class="mt-4 text-center">
+                    <button class="btn btn-success update-status" data-id="{{ $pendaftaran->id }}" data-status="Diterima">Diterima</button>
+                    <button class="btn btn-danger update-status" data-id="{{ $pendaftaran->id }}" data-status="Ditolak">Ditolak</button>
+
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".update-status").forEach(button => {
+            button.addEventListener("click", function () {
+                let id = this.getAttribute("data-id");
+                let status = this.getAttribute("data-status");
+
+                Swal.fire({
+                    title: "Konfirmasi",
+                    text: `Apakah Anda yakin ingin mengubah status menjadi ${status}?`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Ubah"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/pendaftaran/update-status/${id}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                            },
+                            body: JSON.stringify({ status: status })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire("Berhasil!", "Status berhasil diperbarui.", "success")
+                                .then(() => {
+                                    document.getElementById("status-text").innerText = status;
+                                    document.getElementById("status-text").className = "badge " + (status === "Diterima" ? "bg-success" : "bg-danger");
+                                });
+                            } else {
+                                Swal.fire("Gagal!", "Status gagal diperbarui.", "error");
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire("Error!", "Terjadi kesalahan, silakan coba lagi.", "error");
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
 @endsection

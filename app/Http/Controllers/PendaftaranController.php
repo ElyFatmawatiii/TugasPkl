@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -10,37 +11,51 @@ use Illuminate\Support\Facades\Validator;
 class PendaftaranController extends Controller
 {
     public function index(Request $request)
-{
-    if ($request->ajax()) {
-        $pendaftaran = Pendaftaran::select('*');
-        return DataTables::of($pendaftaran)
-            ->addIndexColumn()
-            ->addColumn('aksi', function ($row) {
-                $btn = '<div class="d-flex">
-                            <a href="'.route('pendaftaran.show', $row->id).'" class="btn btn-info btn-sm me-1">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="'.route('pendaftaran.edit', $row->id).'" class="btn btn-warning btn-sm me-1">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form id="delete-form-'.$row->id.'" action="'.route('pendaftaran.destroy', $row->id).'" method="POST" class="d-inline">
-                                '.csrf_field().'
-                                '.method_field("DELETE").'
-                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('.$row->id.')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-                        </div>';
-                return $btn;
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
+    {
+        if ($request->ajax()) {
+            $pendaftaran = Pendaftaran::select('*');
+
+            return DataTables::of($pendaftaran)
+                ->addIndexColumn()
+
+                // ✅ Tambahkan Kolom Status
+                ->addColumn('status', function ($row) {
+                    $badgeClass = match ($row->status) {
+                        'Pending' => 'badge bg-primary',   // Biru
+                        'Diterima' => 'badge bg-success',  // Hijau
+                        'Ditolak' => 'badge bg-danger',    // Merah
+                        default => 'badge bg-secondary',   // Abu-abu (jika status lain)
+                    };
+                
+                    return '<span class="' . $badgeClass . '">' . $row->status . '</span>';
+                })                
+
+                // ✅ Tambahkan Kolom Aksi
+                ->addColumn('aksi', function ($row) {
+                    $btn = '<div class="d-flex">
+                                <a href="' . route('pendaftaran.show', $row->id) . '" class="btn btn-info btn-sm me-1">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="' . route('pendaftaran.edit', $row->id) . '" class="btn btn-warning btn-sm me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form id="delete-form-' . $row->id . '" action="' . route('pendaftaran.destroy', $row->id) . '" method="POST" class="d-inline">
+                                    ' . csrf_field() . '
+                                    ' . method_field("DELETE") . '
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(' . $row->id . ')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>';
+                    return $btn;
+                })
+
+                ->rawColumns(['status', 'aksi']) // Pastikan status bisa dirender dalam HTML
+                ->make(true);
+        }
+
+        return view('backend.pendaftaran.index');
     }
-
-    return view('backend.pendaftaran.index');
-}
-
-
 
     public function create()
     {
@@ -58,6 +73,7 @@ class PendaftaranController extends Controller
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'asal_sekolah' => 'required|string|max:255',
             'nomor_hp' => 'required|numeric|unique:pendaftaran,nomor_hp',
+            'status' => 'required|string|max:255',
             'nama_ayah' => 'required|string|max:255',
             'nama_ibu' => 'required|string|max:255',
             'alamat_email' => 'required|email|unique:pendaftaran,alamat_email',
@@ -66,7 +82,6 @@ class PendaftaranController extends Controller
             'jurusan_ketiga' => 'required|string|max:255',
         ]);
 
-        // Jika validasi gagal, kembali ke halaman sebelumnya dengan error
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -82,6 +97,7 @@ class PendaftaranController extends Controller
             'jenis_kelamin',
             'asal_sekolah',
             'nomor_hp',
+            'status',
             'nama_ayah',
             'nama_ibu',
             'alamat_email',
@@ -90,9 +106,9 @@ class PendaftaranController extends Controller
             'jurusan_ketiga'
         ]));
 
-        // Redirect ke halaman utama dengan pesan sukses
         return redirect('/')->with('success', 'Pendaftaran berhasil! Anda telah terdaftar.');
     }
+
     public function edit($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
@@ -105,6 +121,19 @@ class PendaftaranController extends Controller
         return view('backend.pendaftaran.show', compact('pendaftaran'));
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $pendaftaran = Pendaftaran::find($id);
+        if (!$pendaftaran) {
+            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan.']);
+        }
+    
+        $pendaftaran->status = $request->status;
+        $pendaftaran->save();
+    
+        return response()->json(['success' => true, 'message' => 'Status berhasil diperbarui.']);
+    }
+    
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -115,6 +144,7 @@ class PendaftaranController extends Controller
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'asal_sekolah' => 'required|string|max:255',
             'nomor_hp' => 'required|numeric|unique:pendaftaran,nomor_hp,' . $id,
+            'status' => 'required|string|max:255',
             'nama_ayah' => 'required|string|max:255',
             'nama_ibu' => 'required|string|max:255',
             'alamat_email' => 'required|email|unique:pendaftaran,alamat_email,' . $id,
