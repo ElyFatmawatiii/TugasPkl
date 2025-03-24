@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Student; 
+use App\Models\Student;
 use App\Models\Teacher;
-
+use App\Models\Pendaftaran;
 
 class SearchController extends Controller
 {
@@ -25,22 +25,31 @@ class SearchController extends Controller
 
         // Pencarian di tabel Users
         $userResults = User::where('name', 'LIKE', "%{$query}%")
-                        ->orWhere('email', 'LIKE', "%{$query}%")
-                        ->get();
+            ->orWhere('email', 'LIKE', "%{$query}%")
+            ->get();
 
         // Pencarian di tabel Students
         $studentResults = Student::where('name', 'LIKE', "%{$query}%")
-                        ->orWhere('email', 'LIKE', "%{$query}%")
-                        ->orWhere('class', 'LIKE', "%{$query}%") // Jika ingin mencari berdasarkan kelas
-                        ->get();
+            ->orWhere('email', 'LIKE', "%{$query}%")
+            ->orWhere('class', 'LIKE', "%{$query}%") // Jika ingin mencari berdasarkan kelas
+            ->get();
 
 
         // Pencarian di tabel Teachers
         $teacherResults = Teacher::where('name', 'LIKE', "%{$query}%")
-                        ->orWhere('email', 'LIKE', "%{$query}%")
-                        ->orWhere('class', 'LIKE', "%{$query}%") // Jika ingin mencari berdasarkan kelas
-                        ->get();
+            ->orWhere('email', 'LIKE', "%{$query}%")
+            ->orWhere('class', 'LIKE', "%{$query}%") // Jika ingin mencari berdasarkan kelas
+            ->get();
 
         return view('search', compact('userResults', 'studentResults', 'teacherResults', 'query'));
     }
+
+    public function searchStatus(Request $request)
+{
+    $nisn = $request->input('nisn');
+    $pendaftaran = Pendaftaran::where('nisn', $nisn)->first();
+
+    return view('backend.pendaftaran.searchstatus', compact('pendaftaran'));
+}
+
 }

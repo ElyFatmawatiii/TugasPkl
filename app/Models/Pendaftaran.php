@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +8,7 @@ class Pendaftaran extends Model
 {
     use HasFactory;
 
-    protected $table = 'pendaftaran'; // Pastikan ini ada!
+    protected $table = 'pendaftaran'; // Pastikan sesuai dengan nama tabel di database
 
     protected $fillable = [
         'nama_lengkap',
@@ -27,4 +26,6 @@ class Pendaftaran extends Model
         'jurusan_kedua',
         'jurusan_ketiga',
     ];
+
+    public $timestamps = false; // Matikan timestamps jika tabel tidak memilikinya
 }

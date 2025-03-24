@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PendaftaranController extends Controller
 {
@@ -57,11 +57,6 @@ class PendaftaranController extends Controller
         return view('backend.pendaftaran.index');
     }
 
-    public function create()
-    {
-        return view('pendaftaran.create');
-    }
-
     public function store(Request $request)
     {
         // Validasi data input
@@ -73,7 +68,6 @@ class PendaftaranController extends Controller
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'asal_sekolah' => 'required|string|max:255',
             'nomor_hp' => 'required|numeric|unique:pendaftaran,nomor_hp',
-            'status' => 'required|string|max:255',
             'nama_ayah' => 'required|string|max:255',
             'nama_ibu' => 'required|string|max:255',
             'alamat_email' => 'required|email|unique:pendaftaran,alamat_email',
@@ -82,6 +76,7 @@ class PendaftaranController extends Controller
             'jurusan_ketiga' => 'required|string|max:255',
         ]);
 
+        // Jika validasi gagal, kembali ke halaman sebelumnya dengan error
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -97,7 +92,6 @@ class PendaftaranController extends Controller
             'jenis_kelamin',
             'asal_sekolah',
             'nomor_hp',
-            'status',
             'nama_ayah',
             'nama_ibu',
             'alamat_email',
@@ -106,6 +100,7 @@ class PendaftaranController extends Controller
             'jurusan_ketiga'
         ]));
 
+        // Redirect ke halaman utama dengan pesan sukses
         return redirect('/')->with('success', 'Pendaftaran berhasil! Anda telah terdaftar.');
     }
 
@@ -120,19 +115,6 @@ class PendaftaranController extends Controller
         $pendaftaran = Pendaftaran::findOrFail($id);
         return view('backend.pendaftaran.show', compact('pendaftaran'));
     }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $pendaftaran = Pendaftaran::find($id);
-        if (!$pendaftaran) {
-            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan.']);
-        }
-    
-        $pendaftaran->status = $request->status;
-        $pendaftaran->save();
-    
-        return response()->json(['success' => true, 'message' => 'Status berhasil diperbarui.']);
-    }
     
     public function update(Request $request, $id)
     {
@@ -144,7 +126,6 @@ class PendaftaranController extends Controller
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'asal_sekolah' => 'required|string|max:255',
             'nomor_hp' => 'required|numeric|unique:pendaftaran,nomor_hp,' . $id,
-            'status' => 'required|string|max:255',
             'nama_ayah' => 'required|string|max:255',
             'nama_ibu' => 'required|string|max:255',
             'alamat_email' => 'required|email|unique:pendaftaran,alamat_email,' . $id,
@@ -164,6 +145,24 @@ class PendaftaranController extends Controller
 
         return redirect('pendaftaran')->with('success', 'Data pendaftaran berhasil diperbarui.');
     }
+
+    function updateStatus(Request $request, $id)
+    {
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->status = $request->status;
+        $pendaftaran->save();       
+
+        return redirect('pendaftaran')->with('success', 'Status pendaftaran berhasil diperbarui.');
+    }
+
+    public function downloadPdf($id)
+{
+    $pendaftaran = Pendaftaran::findOrFail($id);
+    
+    $pdf = Pdf::loadView('backend.pendaftaran.download', compact('pendaftaran'));
+    
+    return $pdf->download('formulir_pendaftaran.pdf');
+}
 
     public function destroy($id)
     {

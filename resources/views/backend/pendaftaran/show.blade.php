@@ -81,21 +81,25 @@
                     </tr>
                 </table>
                 <div class="mt-4 text-center">
-                    <button class="btn btn-success update-status" data-id="{{ $pendaftaran->id }}" data-status="Diterima">Diterima</button>
-                    <button class="btn btn-danger update-status" data-id="{{ $pendaftaran->id }}" data-status="Ditolak">Ditolak</button>
+                    <button class="btn btn-success update-status mx-1" data-id="{{ $pendaftaran->id }}" data-status="Diterima">Diterima</button>
+                    <button class="btn btn-danger update-status mx-1" data-id="{{ $pendaftaran->id }}" data-status="Ditolak">Ditolak</button>
 
+                    @if($pendaftaran->status == 'Diterima')
+                    <a href="{{ route('pendaftaran.download', $pendaftaran->id) }}" class="btn btn-primary">Download</a>
+                    @endif
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".update-status").forEach(button => {
-            button.addEventListener("click", function () {
+            button.addEventListener("click", function() {
                 let id = this.getAttribute("data-id");
                 let status = this.getAttribute("data-status");
 
@@ -110,28 +114,27 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch(`/pendaftaran/update-status/${id}`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-                            },
-                            body: JSON.stringify({ status: status })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                                },
+                                body: JSON.stringify({
+                                    status: status
+                                })
+                            })
+                            .then(response => {
+
                                 Swal.fire("Berhasil!", "Status berhasil diperbarui.", "success")
-                                .then(() => {
-                                    document.getElementById("status-text").innerText = status;
-                                    document.getElementById("status-text").className = "badge " + (status === "Diterima" ? "bg-success" : "bg-danger");
-                                });
-                            } else {
-                                Swal.fire("Gagal!", "Status gagal diperbarui.", "error");
-                            }
-                        })
-                        .catch(error => {
-                            Swal.fire("Error!", "Terjadi kesalahan, silakan coba lagi.", "error");
-                        });
+                                    .then(() => {
+                                        document.getElementById("status-text").innerText = status;
+                                        document.getElementById("status-text").className = "badge " + (status === "Diterima" ? "bg-success" : "bg-danger");
+                                    });
+
+                            })
+                            .catch(error => {
+                                Swal.fire("Error!", "Terjadi kesalahan, silakan coba lagi.", "error");
+                            });
                     }
                 });
             });

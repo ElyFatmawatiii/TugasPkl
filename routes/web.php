@@ -28,10 +28,11 @@ Route::middleware('auth', 'verified')->group(function () {
 Route::get('/registeruser', [RegisterUserController::class, 'create'])->name('user.register');
 Route::post('/registeruser', [RegisterUserController::class, 'store'])->name('user.register.store');
 
+Route::get('/search-status', [SearchController::class, 'searchStatus'])->name('search.status');
+
 // Route::get('/registeruser', [RegisterUserController::class, 'create'])->name('registeruser');
 
-Route::get('/register', function () {
-    return redirect()->route('pendaftaran.store');
+Route::get('/register', function () {return redirect()->route('pendaftaran.store');
 });
 
 // Middleware auth untuk halaman yang memerlukan login
@@ -44,6 +45,7 @@ Route::prefix('pendaftaran')->group(function () {
     Route::delete('/pendaftaran/destroy/{id}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
     Route::get('/pendaftaran/show/{id}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
     Route::post('/update-status/{id}', [PendaftaranController::class, 'updateStatus'])->name('pendaftaran.updateStatus');
+    Route::get('/pendaftaran/{id}/download', [PendaftaranController::class, 'downloadPdf'])->name('pendaftaran.download');
 });
 
 Route::prefix('user')->group(function () {
